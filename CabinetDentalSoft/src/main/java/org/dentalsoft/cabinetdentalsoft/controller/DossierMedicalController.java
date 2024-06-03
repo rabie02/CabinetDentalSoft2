@@ -50,7 +50,7 @@ public class DossierMedicalController {
         // Récupérer les consultations et les ajouter au modèle
         List<Consultation> consultations = consultationService.findConsultationsByDossierMedicalNumeroDossier(id);
         model.addAttribute("consultations", consultations);
-        return "dossierMedical";
+        return "dossierMedical";//redirection dossier medical
     }
 
 }
