@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('../images/_fb8a4560-4dd5-4b57-b2ec-e63bacd559eb.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.7)),
+    url('../images/patient.jpeg');
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.container form {
+    flex: 1;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.container h2 {
+    text-align: center;
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: auto;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+input[type="button"] {
+    background-color: #ff0000; /* Couleur de fond rouge */
+    color: white; /* Couleur du texte en blanc */
+    padding: 14px 20px; /* Espacement interne */
+    margin: 8px 10px; /* Marge extérieure */
+    border: none; /* Pas de bordure */
+    border-radius: 4px; /* Coins arrondis */
+    cursor: pointer; /* Curseur pointeur */
+    width: auto; /* Largeur automatique */
+    transition: background-color 0.3s ease; /* Transition de couleur de fond avec effet de fondu */
+}
+
+input[type="button"]:hover {
+    background-color: #cc0000; /* Couleur de fond rouge plus foncée au survol */
+}
+
+.hidden {
+    display: none;
+}

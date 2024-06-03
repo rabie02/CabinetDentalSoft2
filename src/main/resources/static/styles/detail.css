@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-image: url('./images/_fb8a4560-4dd5-4b57-b2ec-e63bacd559eb.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-size: 14px; /* Réduire la taille de la police */
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px; /* Réduire la taille de la police */
+}
+
+.patient-details {
+    width: 60%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: left;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 12px; /* Réduire la taille de la police */
+}
+
+table {
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    font-size: 12px; /* Réduire la taille de la police */
+}
+
+td {
+    padding: 4px; /* Réduire l'espacement interne */
+    border-bottom: 1px solid #ddd;
+}
+
+.detail-label {
+    font-weight: bold;
+}
+
+.detail-value {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.action-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-button,
+.action-button {
+    display: inline-block;
+    width: 100px; /* Réduire la largeur des boutons */
+    margin: 0 5px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px; /* Réduire la taille de la police */
+}
+
+.back-button {
+    background-color: #007bff;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+.action-button {
+    background-color: #28a745;
+}
+
+.action-button.delete {
+    background-color: #dc3545;
+}
+
+.action-button:hover {
+    opacity: 0.8;
+}

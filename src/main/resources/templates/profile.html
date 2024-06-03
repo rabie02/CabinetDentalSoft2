@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Dentiste</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./styles/profile.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="profile-header text-center">
+        <img src="./images/profile.png" alt="Profile Photo">
+        <h2 th:text="${user.nom} + ' ' + ${user.prenom}"></h2>
+        <h4 th:text="${user.specialite}"></h4>
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="toggleForm()"><i class="fas fa-edit"></i> Modifier</button>
+            <button class="btn btn-success"><i class="fas fa-save"></i> Enregistrer</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mt-4">
+            <div class="contact-info">
+                <h3><i class="fas fa-map-marker-alt"></i> Adresse:</h3>
+                <p th:text="${user.adresse}" id="profile-address">Avenue Med 6, Villa John Soussi Rabat</p>
+                <h3><i class="fas fa-phone"></i> Téléphone:</h3>
+                <p th:text="'Pro: ' + ${user.telephone}" id="profile-phonePro">Pro: +212 662 222 333</p>
+                <p th:text="'Perso: ' + ${user.telephone}" id="profile-phonePerso">Perso: +212 675 555 888</p>
+                <h3><i class="fas fa-envelope"></i> Email:</h3>
+                <p th:text="'Pro: ' + ${user.email}" id="profile-emailPro">Pro: john.doe@dentalsoft.ma</p>
+                <p th:text="'Perso: ' + ${user.email}" id="profile-emailPerso">Perso: johnDoe@gmail.com</p>
+            </div>
+        </div>
+        <div class="col-md-8 mt-4">
+            <div class="profile-details">
+                <table class="table profile-table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Diplômes</th>
+                        <th class="text-center">Certificats d'honneur</th>
+                        <th class="text-center">Expériences Professionnelles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center">Item 1</td>
+                        <td class="text-center">Item 1</td>
+                        <td class="text-center">Item 1</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Item 2</td>
+                        <td class="text-center">Item 2</td>
+                        <td class="text-center">Item 2</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Item 3</td>
+                        <td class="text-center">Item 3</td>
+                        <td class="text-center">Item 3</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Item 4</td>
+                        <td class="text-center">Item 4</td>
+                        <td class="text-center">Item 4</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-container" id="editForm">
+        <h3>Modifier les informations</h3>
+        <form>
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" class="form-control" id="name" th:value="${user.nom}">
+            </div>
+            <div class="form-group">
+                <label for="specialty">Spécialité</label>
+                <input type="text" class="form-control" id="specialty" th:value="${user.specialite}">
+            </div>
+            <div class="form-group">
+                <label for="address">Adresse</label>
+                <input type="text" class="form-control" id="address" th:value="${user.adresse}">
+            </div>
+            <div class="form-group">
+                <label for="phonePro">Téléphone Pro</label>
+                <input type="text" class="form-control" id="phonePro" th:value="${user.telephone}">
+            </div>
+            <div class="form-group">
+                <label for="phonePerso">Téléphone Perso</label>
+                <input type="text" class="form-control" id="phonePerso" th:value="${user.telephone}">
+            </div>
+            <div class="form-group">
+                <label for="emailPro">Email Pro</label>
+                <input type="email" class="form-control" id="emailPro" th:value="${user.email}">
+            </div>
+            <div class="form-group">
+                <label for="emailPerso">Email Perso</label>
+                <input type="email" class="form-control" id="emailPerso" th:value="${user.email}">
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="saveChanges()">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<script>
+    function toggleForm() {
+        var form = document.getElementById("editForm");
+        var profileInfo = document.querySelector(".profile-info");
+        var profileDetails = document.querySelector(".profile-details");
+        var buttons = document.querySelector(".buttons");
+
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+            profileInfo.style.display = "none";
+            profileDetails.style.display = "none";
+            buttons.style.display = "none"; // Cacher les boutons "Modifier" et "Enregistrer"
+        } else {
+            form.style.display = "none";
+            profileInfo.style.display = "block";
+            profileDetails.style.display = "block";
+            buttons.style.display = "block"; // Réafficher les boutons "Modifier" et "Enregistrer"
+        }
+    }
+
+    function saveChanges() {
+        // Récupérer les valeurs du formulaire
+        var name = document.getElementById("name").value;
+        var specialty = document.getElementById("specialty").value;
+        var address = document.getElementById("address").value;
+        var phonePro = document.getElementById("phonePro").value;
+        var phonePerso = document.getElementById("phonePerso").value;
+        var emailPro = document.getElementById("emailPro").value;
+        var emailPerso = document.getElement
+    }
+</script>
+</body>
+</html>

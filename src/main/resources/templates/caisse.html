@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/caisse.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1 >Caisse</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>N Facture</th>
+                    <th>Date</th>
+                    <th>Nom complet du patient</th>
+                    <th>N consultation</th>
+                    <th>Montant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>017</td>
+                    <td>12-02-2022</td>
+                    <td>Mohammed Jorio</td>
+                    <td>123</td>
+                    <td>670DH</td>
+                    <td>
+                        <button class="btn btn-edit">Imprimer</button>
+                        <button class="btn btn-delete">Supprimer</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>014</td>
+                    <td>28-02-2022</td>
+                    <td>Amal Khaled</td>
+                    <td>345</td>
+                    <td>21000DH</td>
+                    <td>
+                        <button class="btn btn-edit">Imprimer</button>
+                        <button class="btn btn-delete">Supprimer</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+        <div class="info-container">
+            <div class="info-box">
+                <h3>Recette du mois</h3>
+                <p>32000DH</p>
+            </div>
+            <div class="info-box">
+                <h3>Recette de la semaine</h3>
+                <p>5000DH</p>
+            </div>
+            <div class="info-box">
+                <h3>Recette du jour</h3>
+                <p>1000DH</p>
+            </div>
+            <div class="info-box">
+                <h3>Gain du mois</h3>
+                <p>9000DH</p>
+            </div>
+            <div class="info-box">
+                <h3>Dépense du mois</h3>
+                <p>12000DH</p>
+            </div>
+            <div class="info-box">
+                <h3>Dépense de la semaine</h3>
+                <p>5000DH</p>
+            </div>
+        </div>
+
+    <script>
+        function redirectToDetail(patientId) {
+            window.location.href = "Detail.html?id=" + patientId;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var editButtons = document.querySelectorAll(".btn-edit");
+            var deleteButtons = document.querySelectorAll(".btn-delete");
+            var detailButtons = document.querySelectorAll(".btn-detail");
+
+            editButtons.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var patientId = this.getAttribute("data-id");
+                    editPatient(patientId);
+                });
+            });
+
+            deleteButtons.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var patientId = this.getAttribute("data-id");
+                    deletePatient(patientId);
+                });
+            });
+
+            detailButtons.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var patientId = this.getAttribute("data-id");
+                    redirectToDetail(patientId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
