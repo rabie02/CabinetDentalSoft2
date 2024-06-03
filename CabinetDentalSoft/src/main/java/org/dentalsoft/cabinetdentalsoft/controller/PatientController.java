@@ -131,7 +131,7 @@ public class PatientController {
         return "patientDetail"; // Assurez-vous que ce nom correspond au nom de votre fichier HTML pour les détails du patient
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/patient/{id}")
     public String getPatient(@PathVariable Long id, Model model) {
         Optional<Patient> patientOptional = patientRepository.findById(id);
         if (patientOptional.isPresent()) {
@@ -142,6 +142,7 @@ public class PatientController {
             return "error"; // Gérer le cas où le patient n'est pas trouvé
         }
     }
+
 
 
 

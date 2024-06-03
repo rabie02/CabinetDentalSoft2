@@ -46,11 +46,12 @@
                     <tr th:each="consultation : ${consultations}">
                         <td th:text="${consultation.typeConsultation}">Consultation</td>
                         <td th:text="${consultation.getFactures()}">500 DHS</td>
-                        <td th:text="${#dates.format(consultation.getDateConsultation(), 'yyyy-MM-dd HH:mm:ss')}">2023-05-01</td>
+                        <td th:text="${consultation.dateConsultation}">2023-05-01</td>
                         <td>
-                            <button class="btn btn-edit" th:onclick="'editConsultation(\'' + ${consultation.getIdConsultation()} + '\')'">Modifier</button>
-                            <button class="btn btn-delete" th:onclick="'deleteConsultation(\'' + ${consultation.getIdConsultation()} + '\')'">Supprimer</button>
-                            <button class="btn btn-detail" th:onclick="'showConsultationDetail(\'' + ${consultation.getIdConsultation()} + '\')'" data-id="${consultation.id}">Détail</button>
+                            //hna kaytl3 l'erreur rah dayz string f parametre dial controller
+                            <button class="btn btn-edit" th:data-id="${#strings.replace(consultation.idConsultation, '.', '')}">Modifier</button>
+                            <button class="btn btn-delete" th:onclick="'deleteConsultation(' + ${consultation.idConsultation} + ')'">Supprimer</button>
+                            <button class="btn btn-detail" th:onclick="'showConsultationDetail(' + ${consultation.idConsultation} + ')'">Détail</button>
                         </td>
                     </tr>
                     </tbody>
@@ -59,13 +60,17 @@
                 <div class="form-container">
                     <h2 class="form-title">Ajouter une consultation</h2>
                     <form action="/submit-consultation"  id="consultation-form" method="post">
+                        <input type="hidden" name="consultationId" id="consultation-id"/>
                         <input type="hidden" name="patientId" th:value="${dossierMedical.getPatient().getId()}"/>
                         <div class="form-group">
                             <label for="acte">Acte</label>
-                            <select id="acte" name="acte" required>
-                                <option value="consultation">Consultation</option>
-                                <option value="extraction">Extraction</option>
-                                <option value="nettoyage">Nettoyage</option>
+                            <select id="acte" name="acteId" required>
+                                <option value="1">Consultation Générale</option>
+                                <option value="2">Prévention</option>
+                                <option value="3">Urgence</option>
+                                <option value="4">Consultation</option>
+                                <option value="5">Extraction</option>
+                                <option value="6">Nettoyage</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -73,19 +78,18 @@
                             <input type="text" id="basePrice" name="basePrice" required>
                         </div>
                         <div class="form-group">
-                            <label for="consultationDate">Date de la consultation</label>
-                            <input type="date" id="consultationDate" name="consultationDate" required>
+                            <label for="date">Date de la consultation</label>
+                            <input type="date" id="date" name="date" required>
                         </div>
                         <div class="form-group">
-                            <label for="toothNumber">Numéro de dent</label>
-                            <select id="toothNumber" name="toothNumber" required>
-                                <!-- Generate numbers 1-32 for teeth -->
+                            <label for="nbDents">Numéro de dent</label>
+                            <select id="nbDents" name="dent" required>
                                 <option th:each="i : ${#numbers.sequence(1,32)}" th:value="${i}" th:text="${i}"></option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="patientPrice">Prix patient (DHS)</label>
-                            <input type="text" id="patientPrice" name="patientPrice" required>
+                            <label for="prixPatient">Prix patient (DHS)</label>
+                            <input type="text" id="prixPatient" name="prixPatient" required>
                         </div>
                         <button type="submit" id="consultation-button">Ajouter</button>
                     </form>
@@ -114,7 +118,7 @@
                 <table class="actes-table">
                     <h2>Ajouter une Nouvelle Facture</h2>
                     <form id="facture_Form" method="POST" action="/factures/submit-facture">
-                        <input type="hidden" id="consultation_Id" name="consultationId" value="/* l'ID de la consultation */">
+
                         <div class="form-group">
                             <label for="montant_Total">Montant Total:</label>
                             <input type="number" id="montant_Total" name="montantTotal" class="form-control" required>
@@ -164,25 +168,33 @@
 
 
                 <div class="details-container" style="display: none;">
-                        <h1>Détails de la Facture</h1>
-                        <div class="facture-details">
-                            <!-- Contenu des détails de la facture ici -->
-                        </div>
+                    <h1>Détails de la Facture</h1>
+                    <div class="facture-details">
+                        <!-- Contenu des détails de la facture ici -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 <script>
-    function deletePatient(patientId) {
-        var confirmation = confirm("Êtes-vous sûr de vouloir supprimer ce patient ?");
-        if (confirmation) {
-            console.log("Suppression du patient avec l'ID : " + patientId);
-        } else {
-            console.log("Suppression annulée");
+    function deleteConsultation(consultationId) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette consultation ?")) {
+            $.ajax({
+                type: "POST",
+                url: "/delete-consultation",
+                data: { consultationId: consultationId },
+                success: function (response) {
+                    // Handle success, maybe update UI or show a success message
+                },
+                error: function (error) {
+                    // Handle error
+                }
+            });
         }
     }
+
 
     function redirectToDetail(patientId) {
         window.location.href = "Detail.html?id=" + patientId;
@@ -192,62 +204,65 @@
         var consultationForm = document.getElementById("consultation-form");
         var formTitle = document.querySelector(".form-title");
         var consultationButton = document.getElementById("consultation-button");
+
         var editButtons = document.querySelectorAll(".btn-edit");
 
-        editButtons.forEach(function(btn) {
-            btn.addEventListener("click", function() {
+        editButtons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+
                 var consultationRow = this.parentNode.parentNode;
                 var cells = consultationRow.querySelectorAll("td");
                 var consultationId = this.getAttribute('data-id'); // Assume that you add data-id to the edit button
 
-                var acte = cells[0].textContent;
-                var price = cells[1].textContent;
-                var date = cells[2].textContent;
-                var toothNumber = cells[3].textContent; // You might need to adjust based on actual cell structure
+                var acte = cells[0].textContent.trim();
+                var price = cells[1].textContent.trim();
+                var date = cells[2].textContent.trim();
+                var toothNumber = cells[3].textContent.trim(); // You might need to adjust based on actual cell structure
 
+                document.getElementById("consultation-id").value = consultationId;
                 consultationForm.acte.value = acte;
-                consultationForm.toothNumber.value = toothNumber;
+                consultationForm.dent.value = toothNumber;
                 consultationForm.basePrice.value = price;
-                consultationForm.consultationDate.value = date;
-                document.getElementById("consultation-id").value = consultationId; // Set the hidden field with the consultation ID
+                consultationForm.date.value = date;
+                // Set the hidden field with the consultation ID
 
                 formTitle.textContent = "Modifier une consultation";
                 consultationButton.textContent = "Modifier";
 
                 consultationForm.action = "/edit-consultation"; // Change form action to edit
             });
-        });
 
-        consultationForm.addEventListener("submit", function(event) {
-            if (consultationButton.textContent === "Modifier") {
-                event.preventDefault(); // Prevent default form submission
-                var consultationId = document.getElementById("consultation-id").value;
-                var formData = new FormData(consultationForm);
+            consultationForm.addEventListener("submit", function (event) {
+                if (consultationButton.textContent === "Modifier") {
+                    event.preventDefault(); // Prevent default form submission
 
-                fetch(`/edit-consultation`, {
-                    method: "POST",
-                    body: formData
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.reload(); // Reload the page after successful edit
-                    } else {
-                        alert("Erreur lors de la modification de la consultation");
-                    }
-                }).catch(error => {
-                    console.error("Error:", error);
+                    var formData = new FormData(consultationForm);
+
+                    fetch(consultationForm.action, {
+                        method: "POST",
+                        body: formData
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.reload(); // Reload the page after successful edit
+                        } else {
+                            alert("Erreur lors de la modification de la consultation");
+                        }
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            });
+
+
+            // MDB Tabs initialization
+            var triggerTabList = [].slice.call(document.querySelectorAll('#ex1 a'));
+            triggerTabList.forEach(function (triggerEl) {
+                var tabTrigger = new mdb.Tab(triggerEl);
+
+                triggerEl.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    tabTrigger.show();
                 });
-            }
-        });
-
-
-    // MDB Tabs initialization
-        var triggerTabList = [].slice.call(document.querySelectorAll('#ex1 a'));
-        triggerTabList.forEach(function(triggerEl) {
-            var tabTrigger = new mdb.Tab(triggerEl);
-
-            triggerEl.addEventListener('click', function(event) {
-                event.preventDefault();
-                tabTrigger.show();
             });
         });
     });

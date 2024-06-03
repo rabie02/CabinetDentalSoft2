@@ -1,6 +1,8 @@
 package org.dentalsoft.cabinetdentalsoft.controller;
 import org.dentalsoft.cabinetdentalsoft.entities.*;
+import org.dentalsoft.cabinetdentalsoft.enums.CategorieActe;
 import org.dentalsoft.cabinetdentalsoft.enums.StatutPaiement;
+import org.dentalsoft.cabinetdentalsoft.enums.TypeConsultation;
 import org.dentalsoft.cabinetdentalsoft.repos.*;
 import org.dentalsoft.cabinetdentalsoft.service.servicesDeclaration.ConsultationService;
 import org.dentalsoft.cabinetdentalsoft.service.servicesDeclaration.DossierMedicalService;
@@ -12,31 +14,48 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+@SessionAttributes("user")
 @Controller
 public class ConsultationController {
 
-    @Autowired
-    private ConsultationService consultationService;
 
-    @PostMapping("/submit-consultation")
-    public RedirectView ajouterConsultation(@RequestParam Long patientId, @ModelAttribute Consultation consultation) {
+        @Autowired
+        private ConsultationRepository consultationRepository;
+        @Autowired
+        private ConsultationService consultationService;
+
+        @PostMapping("/submit-consultation")
+        public RedirectView ajouterConsultation(
+                @RequestParam Long patientId,
+                @RequestParam Long acteId,
+                @RequestParam Long dent,
+                @RequestParam Double prixPatient,
+                @ModelAttribute Consultation consultation) {
+            try {
+                consultation.setTypeConsultation(TypeConsultation.CONSULTATION_GENERALE);
+                consultationService.ajouterConsultation(patientId, consultation, acteId, dent, prixPatient);
+                return new RedirectView("/dossierMedical/" + consultation.getDossierMedical().getNumeroDossier());
+            } catch (IllegalArgumentException e) {
+                // Handle error
+                return new RedirectView("/error?message=" + e.getMessage());
+            }
+        }
+
+    @PostMapping("/edit-consultation")
+    public RedirectView modifierConsultation(
+            @RequestParam Long consultationId,
+            @RequestParam Long acteId,
+            @RequestParam Long dent,
+            @RequestParam Double prixPatient,
+            @ModelAttribute Consultation consultation) {
         try {
-            consultationService.ajouterConsultation(patientId, consultation);
+            consultationService.modifierConsultation(consultationId, consultation, acteId, dent, prixPatient);
             return new RedirectView("/dossierMedical/" + consultation.getDossierMedical().getNumeroDossier());
         } catch (IllegalArgumentException e) {
-            // Handle error
-            return new RedirectView("/error?message=" + e.getMessage());
-        }
-    }
-    @PostMapping("/edit-consultation")
-    public RedirectView modifierConsultation(@RequestParam Long consultationId, @ModelAttribute Consultation consultationDetails) {
-        try {
-            consultationService.modifierConsultation(consultationId, consultationDetails);
-            return new RedirectView("/dossierMedical/" + consultationDetails.getDossierMedical().getNumeroDossier());
-        } catch (IllegalArgumentException e) {
-            // Handle error
             return new RedirectView("/error?message=" + e.getMessage());
         }
     }
@@ -50,5 +69,22 @@ public class ConsultationController {
             // Handle error
             return new RedirectView("/error?message=" + e.getMessage());
         }
+    }
+    @GetMapping("/consultations")
+    public String getConsultations(@ModelAttribute("user") Utilisateur user,Model model) {
+        if(user!=null){
+            List<Consultation> consultations = consultationRepository.findAll();
+            model.addAttribute("consultations", consultations);
+            return "dossierMedical";
+        }else {
+            return "redirect:/login";
+        }
+
+    }
+    @GetMapping("/{id}")
+    public String getConsultationById(@PathVariable Long id) {
+        Consultation consultation = consultationService.getConsultationById(id);
+        // Faites quelque chose avec la consultation récupérée, comme l'afficher dans une vue
+        return "dossierMedical"; // Nom de la vue Thymeleaf
     }
 }

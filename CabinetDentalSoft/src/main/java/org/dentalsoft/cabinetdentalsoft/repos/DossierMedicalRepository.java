@@ -9,4 +9,5 @@ public interface DossierMedicalRepository extends JpaRepository<DossierMedical,S
     List<DossierMedical> findByMedecinTraitantId(Long id);
 
     DossierMedical findByNumeroDossier(Long numeroDossier);
+    DossierMedical findByPatientId(Long id);
 }
