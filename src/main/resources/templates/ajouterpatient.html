@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/ajouterPatient.css">
+</head>
+<body>
+<div class="container">
+    <form action="/submit_patient" method="post">
+        <label for="nom">Nom:</label>
+        <input type="text" id="nom" name="nom" required>
+        <label for="prenom">Prénom:</label>
+        <input type="text" id="prenom" name="prenom" required>
+        <label for="cin">CIN:</label>
+        <input type="text" id="cin" name="cin" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="telephone">Téléphone:</label>
+        <input type="text" id="telephone" name="telephone" required>
+        <label for="adresse">Adresse:</label>
+        <input type="text" id="adresse" name="adresse" required>
+        <label for="sexe">Sexe:</label>
+        <select id="sexe" name="sexe" required>
+            <option value="homme">Homme</option>
+            <option value="femme">Femme</option>
+        </select>
+        <label for="dateNaissance">Date de Naissance:</label>
+        <input type="date" id="dateNaissance" name="dateNaissance" required>
+        <label for="mutuelle">Mutuelle:</label>
+        <select id="mutuelle" name="mutuelle" required onchange="toggleAutreMutuelle(this)">
+            <option value="CNAM">CNAM</option>
+            <option value="CIMR">CIMR</option>
+            <option value="CNOPS">CNOPS</option>
+            <option value="CNSS">CNSS</option>
+            <option value="autre">Autre</option>
+        </select>
+        <input type="text" id="autreMutuelle" name="autreMutuelle" class="hidden" placeholder="Précisez la mutuelle">
+        <label for="groupeSanguin">Groupe Sanguin:</label>
+        <select id="groupeSanguin" name="groupeSanguin" required onchange="toggleAutreGroupeSanguin(this)">
+            <option value="O_NEGATIF">O Négatif</option>
+            <option value="A_POSITIF">A Positif</option>
+            <option value="B_NEGATIF">B Négatif</option>
+            <option value="AB_POSITIF">AB Positif</option>
+            <option value="AB_NEGATIF">AB Négatif</option>
+            <option value="A_NEGATIF">A Négatif</option>
+            <option value="O_POSITIF">O Positif</option>
+            <option value="B_POSITIF">B Positif</option>
+            <option value="autre">Autre</option>
+        </select>
+        <input type="text" id="autreGroupeSanguin" name="autreGroupeSanguin" class="hidden" placeholder="Précisez le groupe sanguin">
+        <label for="profession">Profession:</label>
+        <select id="profession" name="profession" required onchange="toggleAutreProfession(this)">
+            <option value="medecin">Médecin</option>
+            <option value="ingenieur">Ingénieur</option>
+            <option value="enseignant">Enseignant</option>
+            <option value="etudiant">Étudiant</option>
+            <option value="autre">Autre</option>
+        </select>
+        <input type="text" id="autreProfession" name="autreProfession" class="hidden" placeholder="Précisez la profession">
+        <label for="antecedentMedical">Antécédents Médicaux:</label>
+        <select id="antecedentMedical" name="antecedentMedical" required onchange="toggleAutre(this, 'autreAntecedentMedical')">
+            <option value="MALADIE_CHRONIQUE">Maladie Chronique</option>
+            <option value="CONTRE_INDICATION">Contre-indication</option>
+            <option value="MALADIE_HEREDITAIRE">Maladie Héréditaire</option>
+            <option value="ALLERGIE">Allergie</option>
+            <option value="autre">Autre</option>
+        </select>
+        <input type="text" id="autreAntecedentMedical" name="autreAntecedentMedical" class="hidden" placeholder="Précisez les antécédents médicaux">
+        <input type="submit" value="Ajouter">
+        <input type="button" value="Vider le formulaire" onclick="viderFormulaire()">
+    </form>
+</div>
+<script>
+    function toggleAutreMutuelle(selectElement) {
+        var autreMutuelleInput = document.getElementById('autreMutuelle');
+        if (selectElement.value === 'autre') {
+            autreMutuelleInput.classList.remove('hidden');
+            autreMutuelleInput.required = true;
+        } else {
+            autreMutuelleInput.classList.add('hidden');
+            autreMutuelleInput.required = false;
+        }
+    }
+
+    function toggleAutreGroupeSanguin(selectElement) {
+        var autreGroupeSanguinInput = document.getElementById('autreGroupeSanguin');
+        if (selectElement.value === 'autre') {
+            autreGroupeSanguinInput.classList.remove('hidden');
+            autreGroupeSanguinInput.required = true;
+        } else {
+            autreGroupeSanguinInput.classList.add('hidden');
+            autreGroupeSanguinInput.required = false;
+        }
+    }
+
+    function toggleAutreProfession(selectElement) {
+        var autreProfessionInput = document.getElementById('autreProfession');
+        if (selectElement.value === 'autre') {
+            autreProfessionInput.classList.remove('hidden');
+            autreProfessionInput.required = true;
+        } else {
+            autreProfessionInput.classList.add('hidden');
+            autreProfessionInput.required = false;
+        }
+    }
+    function toggleAutre(selectElement, inputId) {
+        var autreInput = document.getElementById(inputId);
+        if (selectElement.value === 'autre') {
+            autreInput.classList.remove('hidden');
+            autreInput.required = true;
+        } else {
+            autreInput.classList.add('hidden');
+            autreInput.required = false;
+        }
+    }
+    function viderFormulaire() {
+        document.getElementById('patientForm').reset();
+    }
+</script>
+</body>
+</html>

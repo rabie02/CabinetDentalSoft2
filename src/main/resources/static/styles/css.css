@@ -1,0 +1,72 @@
+body {
+    display: flex;
+    background-color: #a9a9a9;
+  }
+  .sidebar {
+    width: 200px;
+    background-color: #000000;
+    padding-top: 20px;
+    position: fixed;
+    height: 100%;
+  }
+  .sidebar a {
+    display: block;
+    color: black;
+    padding: 15px;
+    text-decoration: none;
+    background-color: #656565;
+  }
+  .sidebar a:hover {
+    background-color: #ddd;
+    color: #000;
+  }
+  .content {
+    margin-left: 200px;
+    padding: 20px;
+    width: 100%;
+  }
+  .sidebar .logout {
+    margin-top: 500px;
+  }
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .profile-header img {
+    width: 100px;
+
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .profile-info {
+    margin-bottom: 20px;
+  }
+
+  .patient-list {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+.patient-item {
+    margin-right: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+.appointment-table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+.appointment-table th,
+.appointment-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.appointment-table th {
+    background-color: #f2f2f2;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Patients</title>
+    <link rel="stylesheet" href="./styles/gestionPatient.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Gestion Patient</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>CIN</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Sexe</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="patient : ${patients}">
+            <td th:text="${patient.getNom()}"></td>
+            <td th:text="${patient.getPrenom()}"></td>
+            <td th:text="${patient.getCin()}"></td>
+            <td th:text="${patient.getEmail()}"></td>
+            <td th:text="${patient.getTelephone()}"></td>
+            <td th:text="${patient.getSexe()}"></td>
+            <td>
+                <a th:href="@{/detail/{id}(id=${patient.getId()})}" class="btn btn-sm btn-info detailPatient"><i class="fas fa-edit"></i></a>
+                <button class="btn btn-sm btn-info detailpatient" data-id="${patient.getId()}"><i class="fas fa-edit"></i></button>
+                <form th:action="@{/deletePatient/{id}(id=${patient.getId()})}" method="post" style="display:inline;">
+                    <button class="btn btn-sm btn-danger deletePatient" type="submit"><i class="fas fa-trash"></i></button>
+                </form>
+                <form th:action="@{/dossierMedical/{id}(id=${patient.dossierMedical?.getNumeroDossier()})}" method="get">
+                    <button type="submit" class="btn btn-sm btn-primary medicalRecord">
+                        <i class="fas fa-folder-open"></i>
+                    </button>
+                </form>
+            <td>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    document.querySelectorAll('.detailpatient').forEach(button => {
+        button.addEventListener('click', function() {
+            const patientId = this.getAttribute('data-id');
+            window.location.href = '/Detail/' + patientId; // Modifier l'URL selon votre structure d'URL
+        });
+    });
+</script>
+</body>
+</html>
