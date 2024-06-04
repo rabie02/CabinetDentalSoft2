@@ -38,7 +38,7 @@ public class ConsultationController {
             try {
                 consultation.setTypeConsultation(TypeConsultation.CONSULTATION_GENERALE);
                 consultationService.ajouterConsultation(patientId, consultation, acteId, dent, prixPatient);
-                return new RedirectView("/dossierMedical/" + consultation.getDossierMedical().getNumeroDossier());
+                return new RedirectView("/dossierMedical/" + consultation.getDossierMedical());
             } catch (IllegalArgumentException e) {
                 // Handle error
                 return new RedirectView("/error?message=" + e.getMessage());
