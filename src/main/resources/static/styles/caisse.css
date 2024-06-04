@@ -1,0 +1,93 @@
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.8);
+    font-size: 14px; /* Adjust font size to make the table smaller */
+}
+
+th, td {
+    padding: 5px; /* Reduce padding to make the table smaller */
+    text-align: center;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.btn {
+    padding: 5px 10px; /* Reduce padding to make buttons smaller */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px; /* Adjust font size to make the buttons smaller */
+}
+
+.btn-edit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.info-box {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px; /* Reduce padding to make info boxes smaller */
+    border-radius: 10px;
+    text-align: center;
+    width: 120px; /* Reduce width to make info boxes smaller */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-box h3 {
+    margin: 0;
+    margin-bottom: 5px; /* Reduce margin to make the header smaller */
+    font-size: 14px; /* Adjust font size to make the header smaller */
+}
+
+.info-box p {
+    margin: 0;
+    font-size: 12px; /* Adjust font size to make the text smaller */
+    word-break: break-word;
+}
+
+footer {
+    margin-top: auto;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px; /* Adjust font size to make the header smaller */
+}

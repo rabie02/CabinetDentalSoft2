@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"   lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/detail.css">
+
+</head>
+<body>
+<h1>Détails du Patient</h1>
+<div class="patient-details">
+    <div class="container">
+            <div>
+                <span class="detail-label">Nom:</span>
+                <span class="detail-value" th:text="${patient.getNom()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Prénom:</span>
+                <span class="detail-value" th:text="${patient.getPrenom()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">CIN:</span>
+                <span class="detail-value" th:text="${patient.getCin()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Email:</span>
+                <span class="detail-value" th:text="${patient.getEmail()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Téléphone:</span>
+                <span class="detail-value" th:text="${patient.getTelephone()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Sexe:</span>
+                <span class="detail-value" th:text="${patient.getSexe()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Date de Naissance:</span>
+                <span class="detail-value" th:text="${patient.getDateNaissance()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Mutuelle:</span>
+                <span class="detail-value" th:text="${patient.getMutuelle()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Groupe Sanguin:</span>
+                <span class="detail-value" th:text="${patient.getGroupeSanguin()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Profession:</span>
+                <span class="detail-value" th:text="${patient.getProfession()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Antécédents Médicaux:</span>
+                <span class="detail-value" th:text="${patient.getAntecedentsMedicaux()}"></span>
+            </div>
+            <div>
+                <span class="detail-label">Dossier Médical:</span>
+                <span class="detail-value" th:text="${patient.getDossierMedical().getNumeroDossier()}"></span>
+            </div>
+            <!-- Ajoutez d'autres détails du patient au besoin -->
+            <div class="action-buttons">
+                <a href="gestionPatient2" class="back-button">Retour</a>
+                <a href="#" class="action-button">Modifier</a>
+                <a href="#" class="action-button delete">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

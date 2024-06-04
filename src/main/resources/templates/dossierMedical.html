@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Médical</title>
+    <link rel="stylesheet" href="./styles/dossierMedical.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css">
+</head>
+<body>
+<div id="main-content" th:if="${dossierMedical}">
+    <!-- Tabs navs -->
+    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a data-mdb-tab-init class="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">Consultation</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-mdb-tab-init class="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">Financiere</a>
+        </li>
+    </ul>
+    <!-- Tabs content -->
+    <div class="tab-content" id="ex1-content">
+        <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+            <h1>Dossier Médical</h1>
+            <div class="container">
+                <!-- Patient Information -->
+                <div class="patient-info">
+                    <h2>Informations du Patient</h2>
+                    <p><strong>Nom:</strong> <span th:text="${dossierMedical.getPatient().getNom()}"></span></p>
+                    <p><strong>Prénom:</strong> <span th:text="${dossierMedical.getPatient().getPrenom()}"></span></p>
+                    <p><strong>Date Naissance:</strong> <span th:text="${dossierMedical.getPatient().getDateNaissance()}"></span> ans</p>
+                    <p><strong>Email:</strong> <span th:text="${dossierMedical.getPatient().getEmail()}"></span></p>
+                    <p><strong>Téléphone:</strong> <span th:text="${dossierMedical.getPatient().getTelephone()}"></span></p>
+                </div>
+                <table class="actes-table">
+                    <thead>
+                    <tr>
+                        <th>Acte</th>
+                        <th>Nr Dent</th>
+                        <th>Prix</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="consultation : ${consultations}">
+                        <td th:text="${consultation.typeConsultation}">Consultation</td>
+                        <td th:text="${consultation.getFactures()}">500 DHS</td>
+                        <td th:text="${consultation.dateConsultation}">2023-05-01</td>
+                        <td>
+                            //hna kaytl3 l'erreur rah dayz string f parametre dial controller
+                            <button class="btn btn-edit" data-id=${consultation.getIdConsultation()}>Modifier</button>
+                            <button class="btn btn-delete" onclick="deleteConsultation(${consultation.id})">Supprimer</button>
+                            <button class="btn btn-detail" th:onclick="'showConsultationDetail(\'' + ${consultation.getIdConsultation()} + '\')'" data-id="${consultation.id}">Détail</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- Form Container -->
+                <div class="form-container">
+                    <h2 class="form-title">Ajouter une consultation</h2>
+                    <form action="/submit-consultation"  id="consultation-form" method="post">
+                        <input type="hidden" name="consultationId" id="consultation-id"/>
+                        <input type="hidden" name="patientId" th:value="${dossierMedical.getPatient().getId()}"/>
+                        <div class="form-group">
+                            <label for="acte">Acte</label>
+                            <select id="acte" name="acteId" required>
+                                <option value="1">Consultation Générale</option>
+                                <option value="2">Prévention</option>
+                                <option value="3">Urgence</option>
+                                <option value="4">Consultation</option>
+                                <option value="5">Extraction</option>
+                                <option value="6">Nettoyage</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="basePrice">Prix de base (DHS)</label>
+                            <input type="text" id="basePrice" name="basePrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date de la consultation</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nbDents">Numéro de dent</label>
+                            <select id="nbDents" name="dent" required>
+                                <option th:each="i : ${#numbers.sequence(1,32)}" th:value="${i}" th:text="${i}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prixPatient">Prix patient (DHS)</label>
+                            <input type="text" id="prixPatient" name="prixPatient" required>
+                        </div>
+                        <button type="submit" id="consultation-button">Ajouter</button>
+                    </form>
+                    <!-- Section pour afficher les détails du patient -->
+                    <div class="details-container" style="display: none;">
+                        <h1>Détails du Patient</h1>
+                        <div class="patient-details">
+                            <!-- Contenu des détails du patient ici -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+            <h1>Dossier Médical</h1>
+            <div class="container">
+                <!-- Patient Information -->
+                <div class="patient-info">
+                    <h2>Informations du Patient</h2>
+                    <p><strong>Nom:</strong> <span th:text="${patient.nom}"></span></p>
+                    <p><strong>Prénom:</strong> <span th:text="${patient.prenom}"></span></p>
+                    <p><strong>Date Naissance:</strong> <span th:text="${patient.dateNaissance}"></span> ans</p>
+                    <p><strong>Email:</strong> <span th:text="${patient.email}"></span></p>
+                    <p><strong>Téléphone:</strong> <span th:text="${patient.telephone}"></span></p>
+                </div>
+                <table class="actes-table">
+                    <h2>Ajouter une Nouvelle Facture</h2>
+                    <form id="facture_Form" method="POST" action="/factures/submit-facture">
+
+                        <div class="form-group">
+                            <label for="montant_Total">Montant Total:</label>
+                            <input type="number" id="montant_Total" name="montantTotal" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="type_Paiement">Type de Paiement:</label>
+                            <select id="type_Paiement" name="typePaiement" class="form-control">
+                                <option value="CASH">Cash</option>
+                                <option value="CARD">Card</option>
+                                <!-- Ajoutez d'autres options de paiement si nécessaire -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="etat_Paiement">Etat de Paiement:</label>
+                            <select id="etat_Paiement" name="etatPaiement" class="form-control">
+                                <option value="non payé">Non payé</option>
+                                <option value="payé">Payé</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+                    <tbody>
+                    <tr th:each="facture : ${factures}">
+                        <td th:text="${facture.numero}">1</td>
+                        <td th:text="${facture.date}">12-02-2022</td>
+                        <td th:text="${facture.etat}">non payé</td>
+                        <td th:text="${facture.montant}">Montant</td>
+                        <td>
+                            <button class="btn btn-edit" th:onclick="'editFacture(\'' + ${facture.id} + '\')'">Modifier</button>
+                            <button class="btn btn-delete" th:onclick="'deleteFacture(\'' + ${facture.id} + '\')'">Supprimer</button>
+                            <button class="btn btn-detail" th:onclick="'showFactureDetail(\'' + ${facture.id} + '\')'" data-id="${facture.id}">Détail</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="payment-info">
+                    <div class="payment-card">
+                        <h3>Totale des payments</h3>
+                        <p>12000 DH</p>
+                    </div>
+                    <div class="payment-card">
+                        <h3>Crédit Payment en attente</h3>
+                        <p>2000 DH</p>
+                    </div>
+                </div>
+                <!-- Form Container -->
+
+
+                <div class="details-container" style="display: none;">
+                    <h1>Détails de la Facture</h1>
+                    <div class="facture-details">
+                        <!-- Contenu des détails de la facture ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function deleteConsultation(consultationId) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette consultation ?")) {
+            $.ajax({
+                type: "POST",
+                url: "/delete-consultation",
+                data: { consultationId: consultationId },
+                success: function (response) {
+                    // Handle success, maybe update UI or show a success message
+                },
+                error: function (error) {
+                    // Handle error
+                }
+            });
+        }
+    }
+
+
+    function redirectToDetail(patientId) {
+        window.location.href = "Detail.html?id=" + patientId;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var consultationForm = document.getElementById("consultation-form");
+        var formTitle = document.querySelector(".form-title");
+        var consultationButton = document.getElementById("consultation-button");
+
+        var editButtons = document.querySelectorAll(".btn-edit");
+
+        editButtons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+
+                var consultationRow = this.parentNode.parentNode;
+                var cells = consultationRow.querySelectorAll("td");
+                var consultationId = this.getAttribute('data-id'); // Assume that you add data-id to the edit button
+
+                var acte = cells[0].textContent.trim();
+                var price = cells[1].textContent.trim();
+                var date = cells[2].textContent.trim();
+                var toothNumber = cells[3].textContent.trim(); // You might need to adjust based on actual cell structure
+
+                document.getElementById("consultation-id").value = consultationId;
+                consultationForm.acte.value = acte;
+                consultationForm.dent.value = toothNumber;
+                consultationForm.basePrice.value = price;
+                consultationForm.date.value = date;
+                // Set the hidden field with the consultation ID
+
+                formTitle.textContent = "Modifier une consultation";
+                consultationButton.textContent = "Modifier";
+
+                consultationForm.action = "/edit-consultation"; // Change form action to edit
+            });
+
+            consultationForm.addEventListener("submit", function (event) {
+                if (consultationButton.textContent === "Modifier") {
+                    event.preventDefault(); // Prevent default form submission
+
+                    var formData = new FormData(consultationForm);
+
+                    fetch(consultationForm.action, {
+                        method: "POST",
+                        body: formData
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.reload(); // Reload the page after successful edit
+                        } else {
+                            alert("Erreur lors de la modification de la consultation");
+                        }
+                    }).catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            });
+
+
+            // MDB Tabs initialization
+            var triggerTabList = [].slice.call(document.querySelectorAll('#ex1 a'));
+            triggerTabList.forEach(function (triggerEl) {
+                var tabTrigger = new mdb.Tab(triggerEl);
+
+                triggerEl.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    tabTrigger.show();
+                });
+            });
+        });
+    });
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+</body>
+</html>
