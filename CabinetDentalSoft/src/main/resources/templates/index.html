@@ -20,6 +20,7 @@
         <div class="p-4 pt-5">
             <h1><a th:href="@{/index}" class="logo">DentalSoft</a></h1>
             <ul class="list-unstyled components mb-5">
+
                 <li class="active">
                     <a th:href="@{/profile}" id="profileLink">Mon Profile</a>
                 </li>
@@ -36,7 +37,7 @@
                     <a th:href="@{/caisse}" id="caisseLink">Caisse</a>
                 </li>
                 <li>
-                    <a href="#">Parametres</a>
+                    <a th:href="@{/home}" id="homeLink">Dashbord</a>
                 </li>
                 <li>
                     <a th:href="@{/login}">Deconnexion</a>
@@ -46,6 +47,7 @@
     </nav>
     <!-- Page Content  -->
     <div id="content" class="p-4 p-md-5 pt-5 content-container">
+        <div id="homeContainer"></div>
         <div id="ajouterPatientContainer"></div>
         <div id="gestionPatientContainer"></div>
         <div id="agendaContainer"></div>
@@ -66,6 +68,7 @@
         var agendaLink = document.getElementById("agendaLink");
         var profileLink = document.getElementById("profileLink");
         var caisseLink = document.getElementById("caisseLink");
+        var homeLink=document.getElementById("homeLink");
 
         // Récupère les conteneurs
         var ajouterPatientContainer = document.getElementById("ajouterPatientContainer");
@@ -73,6 +76,7 @@
         var agendaContainer = document.getElementById("agendaContainer");
         var profileContainer = document.getElementById("profileContainer");
         var caisseContainer = document.getElementById("caisseContainer");
+        var homeCotainer=document.getElementById("homeContainer");
 
         // Fonction pour réinitialiser tous les conteneurs
         function resetContainers() {
@@ -81,21 +85,30 @@
             agendaContainer.innerHTML = '';
             profileContainer.innerHTML = '';
             caisseContainer.innerHTML = '';
+            homeCotainer.innerHTML='';
         }
 
         // Écoute le clic sur le lien "Ajouter Patient"
         ajouterPatientLink.addEventListener("click", function(event) {
             event.preventDefault();
             resetContainers();
-            ajouterPatientContainer.innerHTML = '<iframe src="/ajouterpatient" style="width: 100%; height: 800px; border: none;"></iframe>';
+            ajouterPatientContainer.innerHTML = '<iframe src="/ajouterpatient" style="width: 100%; height: 900px; border: none;"></iframe>';
+        });
+
+        homeLink.addEventListener("click",function (event){
+
+            event.preventDefault();
+            resetContainers();
+            homeCotainer.innerHTML = '<iframe src="/home" style="width: 100%; height: 900px; border: none;"></iframe>';
         });
 
         // Écoute le clic sur le lien "Gestion Patients"
         gestionPatientLink.addEventListener("click", function(event) {
             event.preventDefault();
             resetContainers();
-            gestionPatientContainer.innerHTML = '<iframe src="/patients" style="width: 100%; height: 500px; border: none;"></iframe>';
+            gestionPatientContainer.innerHTML = '<iframe src="/patients" style="width: 100%; height: 900px; border: none;"></iframe>';
         });
+
 
         // Écoute le clic sur le lien "Agenda"
         agendaLink.addEventListener("click", function(event) {
@@ -108,7 +121,7 @@
         profileLink.addEventListener("click", function(event) {
             event.preventDefault();
             resetContainers();
-            profileContainer.innerHTML = '<iframe src="/profile" style="width: 100%; height: 600px; border: none;"></iframe>';
+            profileContainer.innerHTML = '<iframe src="/profile" style="width: 100%; height: 900px; border: none;"></iframe>';
         });
 
         // Écoute le clic sur le lien "Caisse"

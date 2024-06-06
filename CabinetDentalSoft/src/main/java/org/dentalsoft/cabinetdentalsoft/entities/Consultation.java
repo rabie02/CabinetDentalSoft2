@@ -27,7 +27,16 @@ public class Consultation {
     @OneToMany(mappedBy = "consultation")
     private List<InterventionMedecin> interventions;
     @ManyToOne
-    @JoinColumn(name = "dossier_medical_numero_dossier")
+    @JoinColumn(name = "dossier_medical_id")
     private DossierMedical dossierMedical;
+    @Override
+    public String toString() {
+        return "Consultation{" +
+                "id=" + idConsultation +
+                '}';
+    }
+    public List<InterventionMedecin> getInterventions() {
+        return interventions;
+    }
 
 }

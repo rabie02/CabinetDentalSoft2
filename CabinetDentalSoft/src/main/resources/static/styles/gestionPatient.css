@@ -1,4 +1,5 @@
 body {
+    background-color: transparent;
     background-size: cover;
     background-repeat: no-repeat;
     font-family: Arial, sans-serif;
@@ -10,15 +11,16 @@ body {
 }
 
 .container {
+    background-repeat: no-repeat;
+    background-color: transparent;
     width: 100%;
 }
 
 table {
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.7)),
-    url('../images/patient.jpeg');
+    background-color: rgba(255, 255, 255, 0.8);
     width: 100%;
     border-collapse: collapse;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: transparent;
 }
 
 th, td {
@@ -56,10 +58,12 @@ tr:nth-child(even) {
     background-color: #008CBA;
     color: white;
 }
+
 .btn-dossier-medical {
     background-color: #008CBA;
     color: white;
 }
+
 h1 {
     text-align: center;
     margin-bottom: 20px;

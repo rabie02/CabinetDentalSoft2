@@ -9,6 +9,7 @@ import org.dentalsoft.cabinetdentalsoft.enums.StatutPaiement;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -32,4 +33,10 @@ public class DossierMedical {
     private Dentiste medecinTraitant;
     @OneToOne
     private SituationFinanciere situationFinanciere;
+    @Override
+    public String toString() {
+        return "DossierMedical{" +
+                "consultations=" + consultations.stream().map(Consultation::getIdConsultation).collect(Collectors.toList()) +
+                '}';
+    }
 }

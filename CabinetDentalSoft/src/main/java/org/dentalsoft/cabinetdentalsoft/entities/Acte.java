@@ -14,9 +14,15 @@ import java.util.List;
 public class Acte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_acte")
     private Long idActe;
+    @Column(name = "prix_de_base")
+
     private Double prixDeBase;
     private String libelle;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categorie_acte")
     private CategorieActe categorieActe;
     @OneToMany(mappedBy = "acte")
     private List<InterventionMedecin> interventions;

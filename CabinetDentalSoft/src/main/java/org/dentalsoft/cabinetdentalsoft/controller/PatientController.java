@@ -6,6 +6,7 @@ import org.dentalsoft.cabinetdentalsoft.repos.*;
 import org.dentalsoft.cabinetdentalsoft.service.servicesDeclaration.DossierMedicalService;
 import org.dentalsoft.cabinetdentalsoft.service.servicesDeclaration.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -28,17 +29,25 @@ public class PatientController {
 
     @Autowired
     private ConsultationRepository consultationRepository;
+
     @Autowired
     private PersonneRepository personneRepository;
+
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
     @Autowired
     private DossierMedicalService dossierMedicalService;
+
     @Autowired
     private PatientService patientService;
+
     @Autowired
     SituationFinancierRepository situationFinancierRepository;
+
+    @Autowired
+    private InterventionMedecinRepository interventionMedecinRepository;
+
     @Autowired
     public PatientController(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
@@ -74,43 +83,61 @@ public class PatientController {
     }
 
     @PostMapping("/deletePatient/{id}")
-    public RedirectView deletePatient( @ModelAttribute("user") Utilisateur user2,@PathVariable("id") Long id, Model model) {
-        // Recherchez le patient par ID
-        if(user2!=null){
-            Patient patient = patientRepository.findById(id).orElse(null);
-            if (patient != null) {
-                // Recherchez la personne associée et supprimez-la
-                Personne personne = personneRepository.findById(patient.getId()).orElse(null);
-                if (personne != null) {
-                    personneRepository.delete(personne);
-                }
-                // Recherchez le dossier médical du patient et supprimez les consultations associées
-                DossierMedical dossierMedical = patient.getDossierMedical();
-                if (dossierMedical != null) {
-                    List<Consultation> consultations = consultationRepository.findAllByDossierMedical(dossierMedical);
-                    consultationRepository.deleteAll(consultations);
-
-                    // Supprimez la situation financière associée
-                    SituationFinanciere situationFinanciere = dossierMedical.getSituationFinanciere();
-                    if (situationFinanciere != null) {
-                        situationFinanciereRepository.delete(situationFinanciere);
-                    }
-
-                    // Supprimez le dossier médical
-                    dossierMedicalRepository.delete(dossierMedical);
-                }
-                // Supprimez le patient
-                patientRepository.delete(patient);
+    @Transactional
+    public RedirectView deletePatient(@ModelAttribute("user") Utilisateur user2, @PathVariable("id") Long id, Model model) {
+        if (user2 != null) {
+            Optional<Patient> patientOptional = patientRepository.findById(id);
+            if (patientOptional.isPresent()) {
+                Patient patient = patientOptional.get();
+                deletePatientAndRelatedEntities(patient);
             }
+
             // Rechargez la liste des patients pour l'utilisateur
             model.addAttribute("patients", patientRepository.findAll());
 
             // Rediriger vers la même page
             return new RedirectView("/patients");
-        }else {
+        } else {
             return new RedirectView("/login");
         }
+    }
 
+    private void deletePatientAndRelatedEntities(Patient patient) {
+        // Supprimez la personne associée
+        personneRepository.deleteById(patient.getId());
+
+        // Supprimez le dossier médical et ses entités associées
+        deleteDossierMedicalAndRelatedEntities(patient.getDossierMedical());
+
+        // Supprimez le patient
+        patientRepository.deleteById(patient.getId());
+    }
+
+    private void deleteDossierMedicalAndRelatedEntities(DossierMedical dossierMedical) {
+        if (dossierMedical != null) {
+            // Supprimez d'abord les interventions médicales et les consultations associées
+            deleteInterventionsAndConsultations(dossierMedical);
+
+            // Supprimez la situation financière
+            deleteSituationFinanciere(dossierMedical.getSituationFinanciere());
+
+            // Supprimez le dossier médical
+            dossierMedicalRepository.delete(dossierMedical);
+        }
+    }
+
+    private void deleteInterventionsAndConsultations(DossierMedical dossierMedical) {
+        List<Consultation> consultations = consultationRepository.findAllByDossierMedical(dossierMedical);
+        List<InterventionMedecin> interventions = interventionMedecinRepository.findByConsultationIn(consultations);
+
+        interventionMedecinRepository.deleteAll(interventions);
+        consultationRepository.deleteAll(consultations);
+    }
+
+    private void deleteSituationFinanciere(SituationFinanciere situationFinanciere) {
+        if (situationFinanciere != null) {
+            situationFinanciereRepository.delete(situationFinanciere);
+        }
     }
 
 
@@ -131,7 +158,7 @@ public class PatientController {
         return "patientDetail"; // Assurez-vous que ce nom correspond au nom de votre fichier HTML pour les détails du patient
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/patient/{id}")
     public String getPatient(@PathVariable Long id, Model model) {
         Optional<Patient> patientOptional = patientRepository.findById(id);
         if (patientOptional.isPresent()) {
@@ -142,8 +169,5 @@ public class PatientController {
             return "error"; // Gérer le cas où le patient n'est pas trouvé
         }
     }
-
-
-
 
 }

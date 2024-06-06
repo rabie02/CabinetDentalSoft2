@@ -1,6 +1,8 @@
 package org.dentalsoft.cabinetdentalsoft.controller;
 
+import org.dentalsoft.cabinetdentalsoft.entities.Consultation;
 import org.dentalsoft.cabinetdentalsoft.entities.DossierMedical;
+import org.dentalsoft.cabinetdentalsoft.service.servicesDeclaration.ConsultationService;
 import org.dentalsoft.cabinetdentalsoft.service.servicesDeclaration.DossierMedicalService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,14 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/dossierMedical")
 public class DossierMedicalController {
 
     private final DossierMedicalService dossierMedicalService;
+    private final ConsultationService consultationService;
 
-    public DossierMedicalController(DossierMedicalService dossierMedicalService) {
+    public DossierMedicalController(DossierMedicalService dossierMedicalService,ConsultationService consultationService) {
         this.dossierMedicalService = dossierMedicalService;
+        this.consultationService=consultationService;
     }
 
     @GetMapping("/{numeroDossier}")
@@ -39,5 +45,21 @@ public class DossierMedicalController {
             return "error";
         }
     }
+    @GetMapping("/dossierMedical/{id}")
+    public String getDossierMedical(@PathVariable("id") Long id, Model model) {
+        // Récupérer le dossier médical
+        DossierMedical dossierMedical = dossierMedicalService.findByNumeroDossier(id);
+
+        // Récupérer les consultations
+        List<Consultation> consultations = consultationService.findConsultationsByDossierMedicalNumeroDossier(id);
+
+        // Ajouter le dossier médical et les consultations au modèle
+        model.addAttribute("dossierMedical", dossierMedical);
+        model.addAttribute("consultations", consultations);
+
+        // Rediriger vers la vue du dossier médical
+        return "dossierMedical";
+    }
+
 
 }

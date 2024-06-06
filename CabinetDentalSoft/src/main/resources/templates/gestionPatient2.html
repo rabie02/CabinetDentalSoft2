@@ -13,6 +13,7 @@
 <body>
 <div class="container">
     <h1>Gestion Patient</h1>
+    <a href="/ajouterpatient" class="btn btn-sm btn-success" style="margin-bottom: 10px;">Ajouter</a>
     <table>
         <thead>
         <tr>
@@ -34,6 +35,7 @@
             <td th:text="${patient.getTelephone()}"></td>
             <td th:text="${patient.getSexe()}"></td>
             <td>
+                <a th:href="@{/detail/{id}(id=${patient.getId()})}" class="btn btn-sm btn-info detailPatient"><i class="fas fa-edit"></i></a>
                 <button class="btn btn-sm btn-info detailpatient" data-id="${patient.getId()}"><i class="fas fa-edit"></i></button>
                 <form th:action="@{/deletePatient/{id}(id=${patient.getId()})}" method="post" style="display:inline;">
                     <button class="btn btn-sm btn-danger deletePatient" type="submit"><i class="fas fa-trash"></i></button>
