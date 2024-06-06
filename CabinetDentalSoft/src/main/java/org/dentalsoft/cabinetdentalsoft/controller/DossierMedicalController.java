@@ -47,10 +47,19 @@ public class DossierMedicalController {
     }
     @GetMapping("/dossierMedical/{id}")
     public String getDossierMedical(@PathVariable("id") Long id, Model model) {
-        // Récupérer les consultations et les ajouter au modèle
+        // Récupérer le dossier médical
+        DossierMedical dossierMedical = dossierMedicalService.findByNumeroDossier(id);
+
+        // Récupérer les consultations
         List<Consultation> consultations = consultationService.findConsultationsByDossierMedicalNumeroDossier(id);
+
+        // Ajouter le dossier médical et les consultations au modèle
+        model.addAttribute("dossierMedical", dossierMedical);
         model.addAttribute("consultations", consultations);
-        return "dossierMedical";//redirection dossier medical
+
+        // Rediriger vers la vue du dossier médical
+        return "dossierMedical";
     }
+
 
 }

@@ -29,5 +29,14 @@ public class Consultation {
     @ManyToOne
     @JoinColumn(name = "dossier_medical_id")
     private DossierMedical dossierMedical;
+    @Override
+    public String toString() {
+        return "Consultation{" +
+                "id=" + idConsultation +
+                '}';
+    }
+    public List<InterventionMedecin> getInterventions() {
+        return interventions;
+    }
 
 }

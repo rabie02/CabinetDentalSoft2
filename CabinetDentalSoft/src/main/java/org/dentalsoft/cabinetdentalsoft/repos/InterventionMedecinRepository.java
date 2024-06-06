@@ -14,4 +14,5 @@ public interface InterventionMedecinRepository extends JpaRepository<Interventio
     Optional<InterventionMedecin> findByConsultationId(@Param("consultationId") Long consultationId);
 
     List<InterventionMedecin> findByConsultation(Consultation consultation);
+    List<InterventionMedecin> findByConsultationIn(List<Consultation> consultations);
 }

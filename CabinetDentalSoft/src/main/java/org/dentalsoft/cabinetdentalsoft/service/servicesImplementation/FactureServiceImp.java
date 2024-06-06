@@ -32,5 +32,10 @@ public class FactureServiceImp implements FactureService {
         return factureRepository.save(facture);
     }
 
+    @Override
+    public List<Facture> findAll() {
+        return factureRepository.findAll();
+    }
+
     // Ajoutez d'autres méthodes métier si nécessaire
 }

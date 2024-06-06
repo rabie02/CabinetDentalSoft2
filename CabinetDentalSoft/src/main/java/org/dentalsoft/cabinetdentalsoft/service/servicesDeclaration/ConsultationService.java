@@ -17,4 +17,6 @@ public interface ConsultationService {
      void supprimerConsultation(Long id);
     List<Consultation> findConsultationsByDossierMedicalNumeroDossier(Long dossierMedicalId);
     Consultation getConsultationById(Long id);
+    void modifierConsultation(Long consultationId, Long dent, Double prixPatient);
+
 }

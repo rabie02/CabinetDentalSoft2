@@ -119,5 +119,35 @@ public class ConsulationServiceImp implements ConsultationService {
         return optionalConsultation.orElse(null); // Retourne la consultation ou null si elle n'est pas présente
     }
 
+    @Override
+    public void modifierConsultation(Long consultationId, Long dent, Double prixPatient) {
+        // Récupérez la consultation à modifier
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new IllegalArgumentException("La consultation à modifier n'a pas été trouvée."));
+
+        // Récupérez la liste d'interventions associées à la consultation
+        List<InterventionMedecin> interventions = consultation.getInterventions();
+
+        // Assurez-vous que la liste d'interventions n'est pas vide
+        if (!interventions.isEmpty()) {
+            // Parcourez toutes les interventions de la liste
+            for (InterventionMedecin intervention : interventions) {
+                // Mettez à jour les champs de chaque intervention
+                intervention.setDent(dent);
+                intervention.setPrixPatient(prixPatient);
+                Acte acte = intervention.getActe();
+
+                // Mettez à jour le prix de l'acte si nécessaire
+                // Note: Vous pouvez ajouter des conditions supplémentaires si nécessaire
+                acte.setPrixDeBase(prixPatient);
+
+                // Enregistrez les modifications de l'intervention dans la base de données
+                interventionMedecinRepository.save(intervention);
+            }
+        } else {
+            throw new IllegalArgumentException("Aucune intervention associée à la consultation.");
+        }
+    }
+
 
 }

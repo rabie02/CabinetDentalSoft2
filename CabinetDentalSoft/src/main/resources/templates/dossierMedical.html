@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dossier Médical</title>
-    <link rel="stylesheet" href="./styles/dossierMedical.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css">
+    <link rel="stylesheet" href="/styles/dossierMedical.css">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
+    />
+
 </head>
 <body>
 <div id="main-content" th:if="${dossierMedical}">
@@ -15,7 +19,16 @@
             <a data-mdb-tab-init class="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">Consultation</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a data-mdb-tab-init class="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">Financiere</a>
+            <a
+                    data-mdb-tab-init
+                    class="nav-link"
+                    id="ex1-tab-2"
+                    href="#ex1-tabs-2"
+                    role="tab"
+                    aria-controls="ex1-tabs-2"
+                    aria-selected="false"
+            >financiere</a
+            >
         </li>
     </ul>
     <!-- Tabs content -->
@@ -36,8 +49,8 @@
                     <thead>
                     <tr>
                         <th>Acte</th>
-                        <th>Nr Dent</th>
-                        <th>Prix</th>
+                        <th>Prix(Dh)</th>
+                        <th>Nbr dent</th>
                         <th>Date</th>
                         <th>Actions</th>
                     </tr>
@@ -45,17 +58,33 @@
                     <tbody>
                     <tr th:each="consultation : ${consultations}">
                         <td th:text="${consultation.typeConsultation}">Consultation</td>
-                        <td th:text="${consultation.getFactures()}">500 DHS</td>
-                        <td th:text="${consultation.dateConsultation}">2023-05-01</td>
                         <td>
-                            //hna kaytl3 l'erreur rah dayz string f parametre dial controller
+                            <ul>
+                                <li th:each="intervention : ${consultation.interventions}">
+                                    <span th:text="${intervention.acte.prixDeBase}">Prix Base</span>
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <span th:each="intervention : ${consultation.interventions}" th:text="${intervention.dent}">Dent</span>
+                        </td>
+
+                        <td th:text="${consultation.dateConsultation}">2023-05-01</td>
+
+                        <td>
                             <button class="btn btn-edit" th:data-id="${#strings.replace(consultation.idConsultation, '.', '')}">Modifier</button>
-                            <button class="btn btn-delete" th:onclick="'deleteConsultation(' + ${consultation.idConsultation} + ')'">Supprimer</button>
+                            <form th:action="@{/delete-consultation}" method="post">
+                                <input type="hidden" th:name="consultationId" th:value="${consultation.idConsultation}">
+                                <button type="submit" class="btn btn-delete">Supprimer</button>
+                            </form>
                             <button class="btn btn-detail" th:onclick="'showConsultationDetail(' + ${consultation.idConsultation} + ')'">Détail</button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                <div id="imagecontainer">
+                    <img  src="/images/dents.png" class="small-image">
+                </div>
                 <!-- Form Container -->
                 <div class="form-container">
                     <h2 class="form-title">Ajouter une consultation</h2>
@@ -78,8 +107,8 @@
                             <input type="text" id="basePrice" name="basePrice" required>
                         </div>
                         <div class="form-group">
-                            <label for="date">Date de la consultation</label>
-                            <input type="date" id="date" name="date" required>
+                            <label for="date2">Date de la consultation</label>
+                            <input type="date" id="date2" name="date" required>
                         </div>
                         <div class="form-group">
                             <label for="nbDents">Numéro de dent</label>
@@ -111,49 +140,37 @@
                     <h2>Informations du Patient</h2>
                     <p><strong>Nom:</strong> <span th:text="${patient.nom}"></span></p>
                     <p><strong>Prénom:</strong> <span th:text="${patient.prenom}"></span></p>
-                    <p><strong>Date Naissance:</strong> <span th:text="${patient.dateNaissance}"></span> ans</p>
+                    <p><strong>l'age:</strong> <span id="date-naissance" data-date-naissance="${patient.dateNaissance}"></span> ans</p>
                     <p><strong>Email:</strong> <span th:text="${patient.email}"></span></p>
                     <p><strong>Téléphone:</strong> <span th:text="${patient.telephone}"></span></p>
                 </div>
                 <table class="actes-table">
-                    <h2>Ajouter une Nouvelle Facture</h2>
-                    <form id="facture_Form" method="POST" action="/factures/submit-facture">
-
-                        <div class="form-group">
-                            <label for="montant_Total">Montant Total:</label>
-                            <input type="number" id="montant_Total" name="montantTotal" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="type_Paiement">Type de Paiement:</label>
-                            <select id="type_Paiement" name="typePaiement" class="form-control">
-                                <option value="CASH">Cash</option>
-                                <option value="CARD">Card</option>
-                                <!-- Ajoutez d'autres options de paiement si nécessaire -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="etat_Paiement">Etat de Paiement:</label>
-                            <select id="etat_Paiement" name="etatPaiement" class="form-control">
-                                <option value="non payé">Non payé</option>
-                                <option value="payé">Payé</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    </form>
+                    <thead>
+                    <tr>
+                        <th>N Facture</th>
+                        <th>Date</th>
+                        <th>Etat</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     <tbody>
                     <tr th:each="facture : ${factures}">
-                        <td th:text="${facture.numero}">1</td>
-                        <td th:text="${facture.date}">12-02-2022</td>
-                        <td th:text="${facture.etat}">non payé</td>
-                        <td th:text="${facture.montant}">Montant</td>
+                        <td th:text="${factures.getIdSituationFinanciere()}">1</td>
+                        <td th:text="${factures.getDateCreation()}">12-02-2022</td>
+                        <td th:text="${factures.getMontantGlobalRestant()}">non payé</td>
+                        <td th:text="${factures.getMontantGlobalPaye()}">Montant</td>
                         <td>
                             <button class="btn btn-edit" th:onclick="'editFacture(\'' + ${facture.id} + '\')'">Modifier</button>
-                            <button class="btn btn-delete" th:onclick="'deleteFacture(\'' + ${facture.id} + '\')'">Supprimer</button>
-                            <button class="btn btn-detail" th:onclick="'showFactureDetail(\'' + ${facture.id} + '\')'" data-id="${facture.id}">Détail</button>
+                            <form action="/situationFinanciere/factures/{factureId}/delete" method="post">
+                                <input type="hidden" id="factureId" name="factureId" th:value="${facture.id}">
+                                <button type="submit">Supprimer</button>
+                            </form>
+                            <button class="btn btn-detail" th:onclick="'showFactureDetail(\'' + ${facture.id} + '\')'" th:data-id="${facture.id}">Détail</button>
                         </td>
                     </tr>
                     </tbody>
-                </table>
                 <div id="payment-info">
                     <div class="payment-card">
                         <h3>Totale des payments</h3>
@@ -165,35 +182,48 @@
                     </div>
                 </div>
                 <!-- Form Container -->
+                <div class="form-container">
+                    <h2 class="form-title">Opération de nouvelle Facture</h2>
+                    <form action="/addFacture" method="post">
+                        <input type="hidden" id="situationFinanciereId" name="situationFinanciereId" th:data-id="${#strings.replac(, '.', '')}">
 
+                        <label for="montantRestant">Montant Restant:</label>
+                        <input type="number" id="montantRestant" name="montantRestant" required>
 
-                <div class="details-container" style="display: none;">
-                    <h1>Détails de la Facture</h1>
-                    <div class="facture-details">
-                        <!-- Contenu des détails de la facture ici -->
+                        <label for="montantPaye">Montant Payé:</label>
+                        <input type="number" id="montantPaye" name="montantPaye" required>
+
+                        <label for="montantTotal">Montant Total:</label>
+                        <input type="number" id="montantTotal" name="montantTotal" required>
+
+                        <label for="typePaiement">Type de Paiement:</label>
+                        <select id="typePaiement" name="typePaiement" required>
+                            <option value="CHEQUE">Chèque</option>
+                            <option value="VIREMENT">Virement</option>
+                            <option value="CARTE_CREDIT">Carte de Crédit</option>
+                            <option value="ESPECE">Espèce</option>
+                            <option value="AUTRE">Autre</option>
+                        </select>
+
+                        <label for="dateFacturation">Date de Facturation:</label>
+                        <input type="date" id="dateFacturation" name="dateFacturation" required>
+
+                        <button type="submit">Ajouter Facture</button>
+                    </form>
+                    <div class="details-container" style="display: none;">
+                        <h1>Détails de la Facture</h1>
+                        <div class="facture-details">
+                            <!-- Contenu des détails de la facture ici -->
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
-</div>
 <script>
-    function deleteConsultation(consultationId) {
-        if (confirm("Êtes-vous sûr de vouloir supprimer cette consultation ?")) {
-            $.ajax({
-                type: "POST",
-                url: "/delete-consultation",
-                data: { consultationId: consultationId },
-                success: function (response) {
-                    // Handle success, maybe update UI or show a success message
-                },
-                error: function (error) {
-                    // Handle error
-                }
-            });
-        }
-    }
+
 
 
     function redirectToDetail(patientId) {
@@ -209,22 +239,20 @@
 
         editButtons.forEach(function (btn) {
             btn.addEventListener("click", function () {
-
                 var consultationRow = this.parentNode.parentNode;
                 var cells = consultationRow.querySelectorAll("td");
-                var consultationId = this.getAttribute('data-id'); // Assume that you add data-id to the edit button
+                var consultationId = this.getAttribute('data-id');
 
                 var acte = cells[0].textContent.trim();
-                var price = cells[1].textContent.trim();
-                var date = cells[2].textContent.trim();
-                var toothNumber = cells[3].textContent.trim(); // You might need to adjust based on actual cell structure
+                var price = cells[1].querySelector("span").textContent.trim();
+                var toothNumber = cells[2].querySelector("span").textContent.trim();
+                var date = cells[3].textContent.trim();
 
                 document.getElementById("consultation-id").value = consultationId;
-                consultationForm.acte.value = acte;
+                consultationForm.acteId.value = acte; // Change to acteId
                 consultationForm.dent.value = toothNumber;
                 consultationForm.basePrice.value = price;
                 consultationForm.date.value = date;
-                // Set the hidden field with the consultation ID
 
                 formTitle.textContent = "Modifier une consultation";
                 consultationButton.textContent = "Modifier";
@@ -244,28 +272,40 @@
                     }).then(response => {
                         if (response.ok) {
                             window.location.reload(); // Reload the page after successful edit
-                        } else {
-                            alert("Erreur lors de la modification de la consultation");
                         }
                     }).catch(error => {
                         console.error("Error:", error);
                     });
                 }
             });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        var triggerTabList = [].slice.call(document.querySelectorAll('#ex1 a'));
+        triggerTabList.forEach(function(triggerEl) {
+            var tabTrigger = new mdb.Tab(triggerEl);
 
-
-            // MDB Tabs initialization
-            var triggerTabList = [].slice.call(document.querySelectorAll('#ex1 a'));
-            triggerTabList.forEach(function (triggerEl) {
-                var tabTrigger = new mdb.Tab(triggerEl);
-
-                triggerEl.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    tabTrigger.show();
-                });
+            triggerEl.addEventListener('click', function(event) {
+                event.preventDefault();
+                tabTrigger.show();
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateNaissanceElement = document.getElementById('date-naissance');
+        const dateNaissance = new Date(dateNaissanceElement.getAttribute('data-date-naissance'));
+        const today = new Date();
+        let age = today.getFullYear() - dateNaissance.getFullYear();
+        const monthDiff = today.getMonth() - dateNaissance.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dateNaissance.getDate())) {
+            age--;
+        }
+
+        dateNaissanceElement.textContent = age;
+    });
+
+
 </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
 </body>

@@ -9,10 +9,7 @@ import org.dentalsoft.cabinetdentalsoft.repos.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -194,7 +191,14 @@ public class front {
         }else {
             return "redirect:/login";
         }
-
+    }
+    @RequestMapping("/home")
+    public String loginSubmit(){
+        return "/pages/landing_page";
+    }
+    @RequestMapping("/login2")
+    public String loginPage(){
+        return "auth-login";
     }
 
 }
